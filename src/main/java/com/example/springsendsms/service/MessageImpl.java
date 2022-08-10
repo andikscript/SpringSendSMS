@@ -20,14 +20,11 @@ public class MessageImpl implements MessageService {
     private String fromPhone;
 
     @Override
-    public void sendMessage(String number) {
+    public void sendMessage(String number, MessagePhone message) {
         Twilio.init(sid,auth);
-
-        MessagePhone message = new MessagePhone(number, fromPhone, "Hello");
-
         Message.creator(
-                new PhoneNumber(message.getToPhone()),
-                new PhoneNumber(message.getFromPhone()), message.getMessage()
+                new PhoneNumber(number),
+                new PhoneNumber(fromPhone), message.getMessage()
         ).create();
     }
 }
