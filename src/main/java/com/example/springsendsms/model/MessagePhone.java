@@ -8,6 +8,12 @@ public class MessagePhone {
 
     private String message;
 
+    public MessagePhone(String toPhone, String fromPhone, String message) {
+        this.toPhone = toPhone;
+        this.fromPhone = fromPhone;
+        this.message = message;
+    }
+
     public String getToPhone() {
         return toPhone;
     }
