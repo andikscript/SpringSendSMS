@@ -20,3 +20,10 @@ Simple send SMS with Spring Boot
 Methods | Url | Action |
 --- | --- | --- |
 | GET | /api/phone/{phoneNumber}/verification | send message on phone number |
+
+## Format JSON
+```
+{
+  "message":"{body message for send}"
+}
+```  
