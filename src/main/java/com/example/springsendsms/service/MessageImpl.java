@@ -1,30 +1,24 @@
 package com.example.springsendsms.service;
 
 import com.example.springsendsms.model.MessagePhone;
-import com.twilio.Twilio;
-import com.twilio.rest.api.v2010.account.Message;
-import com.twilio.type.PhoneNumber;
-import org.springframework.beans.factory.annotation.Value;
+import com.example.springsendsms.model.MessageProcess;
+import com.github.sonus21.rqueue.core.RqueueMessageEnqueuer;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MessageImpl implements MessageService {
 
-    @Value("${SendMessage.twilio.account.sid}")
-    private String sid;
+    private final RqueueMessageEnqueuer rqueueMessageEnqueuer;
 
-    @Value("${SendMessage.twilio.account.authtoken}")
-    private String auth;
-
-    @Value("${SendMessage.numberPhone}")
-    private String fromPhone;
+    public MessageImpl(RqueueMessageEnqueuer rqueueMessageEnqueuer) {
+        this.rqueueMessageEnqueuer = rqueueMessageEnqueuer;
+    }
 
     @Override
-    public void sendMessage(String number, MessagePhone message) {
-        Twilio.init(sid,auth);
-        Message.creator(
-                new PhoneNumber(number),
-                new PhoneNumber(fromPhone), message.getMessage()
-        ).create();
+    public void sendMessage(String phone, MessagePhone message) {
+        MessageProcess mp = new MessageProcess();
+        mp.setToPhone(phone);
+        mp.setMessage(message.getMessage());
+        rqueueMessageEnqueuer.enqueue("send-queue", mp);
     }
 }
